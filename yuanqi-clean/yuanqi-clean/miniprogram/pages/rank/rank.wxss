@@ -1,0 +1,237 @@
+/* pages/rank/rank.wxss */
+.picker {
+  font-size: 26rpx;
+  color: var(--primary);
+  background: var(--primary-soft);
+  padding: 10rpx 20rpx;
+  border-radius: 12rpx;
+}
+
+/* ---------- 焕新之星 ---------- */
+.star-card {
+  position: relative;
+  background: linear-gradient(160deg, #eef3fd, #ffffff 60%);
+  border: 2rpx solid #c6d5f5;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+}
+
+/* 猴子徽标：焕新之星吉祥物 */
+.star-mascot {
+  position: absolute;
+  right: -16rpx;
+  top: -16rpx;
+  width: 130rpx;
+  height: 130rpx;
+  border-radius: 50%;
+  opacity: 0.92;
+  border: 4rpx solid #c6d5f5;
+}
+
+.star-hd {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.star-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #2b4ea2;
+}
+
+.star-sub {
+  font-size: 22rpx;
+  color: var(--text-sub);
+}
+
+.star-empty {
+  font-size: 24rpx;
+  color: var(--text-weak);
+  text-align: center;
+  padding: 30rpx 0;
+}
+
+.star-item {
+  background: #fff;
+  border-radius: 18rpx;
+  padding: 22rpx;
+  margin-top: 18rpx;
+  box-shadow: 0 4rpx 16rpx rgba(43, 78, 162, 0.12);
+}
+
+.star-medal {
+  font-size: 48rpx;
+  margin-right: 16rpx;
+}
+
+.star-name {
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.dim-mini {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 16rpx;
+}
+
+.dim-mini-item {
+  width: 50%;
+  box-sizing: border-box;
+  padding-right: 16rpx;
+  margin-bottom: 10rpx;
+}
+
+.dim-mini-name {
+  font-size: 21rpx;
+  color: var(--text-sub);
+}
+
+/* ---------- 候选 ---------- */
+.cand-item {
+  border-top: 2rpx solid var(--line);
+  padding: 16rpx 0;
+}
+
+.cand-item:first-of-type {
+  border-top: none;
+}
+
+/* ---------- 得分榜 ---------- */
+.rank-item {
+  border-top: 2rpx solid var(--line);
+  padding: 22rpx 0;
+}
+
+.rank-item:first-of-type {
+  border-top: none;
+}
+
+.rank-idx {
+  width: 44rpx;
+  height: 44rpx;
+  line-height: 44rpx;
+  text-align: center;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: 24rpx;
+  font-weight: 700;
+  margin-right: 14rpx;
+}
+
+.rank-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  margin-right: 12rpx;
+}
+
+.rank-total {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.dim-detail {
+  background: #f7f9fd;
+  border-radius: 14rpx;
+  padding: 18rpx 20rpx;
+  margin-top: 16rpx;
+}
+
+.dim-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.dim-row:last-child {
+  margin-bottom: 0;
+}
+
+.dim-row-name {
+  width: 150rpx;
+  font-size: 23rpx;
+  color: var(--text-sub);
+}
+
+.dim-bar {
+  flex: 1;
+  margin: 0 16rpx;
+}
+
+.dim-row-value {
+  width: 90rpx;
+  text-align: right;
+  font-size: 23rpx;
+  color: var(--text);
+}
+
+/* ---------- 违规 ---------- */
+.viol-item {
+  border-top: 2rpx solid var(--line);
+  padding: 16rpx 0;
+}
+
+.viol-item:first-of-type {
+  border-top: none;
+}
+
+.footnote {
+  text-align: center;
+  font-size: 24rpx;
+  color: var(--primary);
+  padding: 20rpx 0 10rpx;
+}
+
+/* ---------- 照片展示 ---------- */
+.photo-strip {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 16rpx;
+}
+
+.photo-thumb {
+  width: 150rpx;
+  height: 150rpx;
+  border-radius: 14rpx;
+  margin: 0 12rpx 12rpx 0;
+  background: #eef1f6;
+}
+
+.photo-wall {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 18rpx;
+}
+
+.wall-item {
+  width: 33.33%;
+  box-sizing: border-box;
+  padding: 6rpx;
+}
+
+.wall-photo {
+  display: block;
+  width: 100%;
+  height: 200rpx;
+  border-radius: 14rpx;
+  background: #eef1f6;
+}
+
+.wall-name {
+  display: block;
+  font-size: 21rpx;
+  color: var(--text-sub);
+  text-align: center;
+  margin-top: 6rpx;
+}
+
+/* 仅本人可见的私密卡 */
+.private-card {
+  background: #f7f9fd;
+  border: 2rpx dashed #c6d5f5;
+}

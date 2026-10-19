@@ -1,0 +1,153 @@
+<!-- pages/rank/rank.wxml —— 首页：卫生成果照片墙 + 焕新之星 + 本周得分榜 -->
+<view class="page">
+
+  <!-- 顶部：周次 + 概览 -->
+  <view class="card">
+    <view class="row-between">
+      <view class="col">
+        <text class="title">{{weekLabel}} 结果公示</text>
+        <text class="text-weak mt-8">{{weeks[weekIndex].range}} · 已提交 {{summary.submitted}}/{{summary.rooms}} · 评分 {{summary.graded}} 条</text>
+      </view>
+      <picker mode="selector" range="{{weeks}}" range-key="label" value="{{weekIndex}}" bindchange="onWeekChange">
+        <view class="picker">切换周次 ▾</view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 焕新之星：不排名次、不展示分数 -->
+  <view class="star-card">
+    <image class="star-mascot" src="/assets/logo.jpg" mode="aspectFit" />
+    <view class="star-hd">
+      <text class="star-title">{{weekLabel}} · 焕新之星 🐵✨</text>
+      <text class="star-sub">累计达标 · 无违规记录</text>
+    </view>
+
+    <view wx:if="{{starEmpty}}" class="star-empty">
+      暂无符合条件的寝室（需：累计达标周次 ≥ 1 且无任何违规记录）
+    </view>
+
+    <view wx:for="{{starList}}" wx:key="id" class="star-item">
+      <view class="row-between">
+        <view class="col">
+          <text class="star-name">{{item.name}}</text>
+          <text class="text-weak">累计达标 {{item.excellentWeeks}} 周</text>
+        </view>
+        <text class="tag tag-green">焕新之星</text>
+      </view>
+      <view wx:if="{{item.photos.length}}" class="photo-strip">
+        <image wx:for="{{item.photos}}" wx:for-item="p" wx:for-index="pi" wx:key="slot" class="photo-thumb"
+               src="{{p.path}}" mode="aspectFill" bindtap="previewStarPhoto" data-index="{{index}}" data-url="{{p.path}}"></image>
+      </view>
+    </view>
+  </view>
+
+  <!-- 本周卫生成果照片墙 -->
+  <view class="card">
+    <view class="row-between">
+      <text class="title">📷 本周卫生成果</text>
+      <text class="text-weak">{{photoWall.length}} 张</text>
+    </view>
+    <view class="text-weak mt-8">各寝室上传的打扫后实景照片，点击可放大查看</view>
+
+    <view wx:if="{{!photoWall.length}}" class="empty">本周还没有寝室上传照片</view>
+
+    <view wx:else class="photo-wall">
+      <view wx:for="{{photoWall}}" wx:key="path" class="wall-item">
+        <image class="wall-photo" src="{{item.path}}" mode="aspectFill"
+               bindtap="previewPhoto" data-url="{{item.path}}"></image>
+        <text class="wall-name">{{item.roomName}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 月度候选 -->
+  <view wx:if="{{candList.length}}" class="card">
+    <text class="title">月度候选名单</text>
+    <view class="text-weak mt-8">单周互评优秀率 ≥ 75% 且现场抽查 A 级的寝室</view>
+    <view wx:for="{{candList}}" wx:key="id" class="cand-item">
+      <view class="row-between">
+        <text class="bold">{{item.name}}</text>
+        <text class="text-sub">达标 {{item.excellentWeeks}} 周 · 均分 {{item.avgTotal}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 本周得分榜 -->
+  <view class="card">
+    <text class="title">{{weekLabel}} 寝室得分榜</text>
+    <view class="text-weak mt-8">点击寝室查看五个维度的详细得分与上传照片</view>
+
+    <view wx:if="{{!weekRows.length}}" class="empty">暂无寝室数据</view>
+
+    <view wx:for="{{weekRows}}" wx:key="id" class="rank-item" bindtap="toggleRow" data-index="{{index}}">
+      <view class="row-between">
+        <view class="row">
+          <text class="rank-idx">{{index + 1}}</text>
+          <text class="rank-name">{{item.name}}</text>
+          <text class="tag tag-{{item.gradeTag}}">{{item.gradeText}}</text>
+          <text class="tag tag-{{item.mutualTag}}">互评 {{item.mutualText}}</text>
+          <text wx:if="{{item.isCandidate}}" class="tag tag-green">本周达标</text>
+        </view>
+        <text class="rank-total">{{item.total}}</text>
+      </view>
+      <view class="row-between mt-8">
+        <text class="text-weak">互评优秀率 {{item.excellentRateText}} · {{item.reviewCount}} 条评分</text>
+        <text class="text-weak">{{item.open ? '收起' : '展开维度 ›'}}</text>
+      </view>
+
+      <view wx:if="{{item.open}}" class="dim-detail">
+        <view wx:if="{{item.photos.length}}" class="photo-strip">
+          <image wx:for="{{item.photos}}" wx:for-item="p" wx:for-index="pi" wx:key="slot" class="photo-thumb"
+                 src="{{p.path}}" mode="aspectFill" catchtap="previewRowPhoto" data-index="{{index}}" data-url="{{p.path}}"></image>
+        </view>
+        <view wx:for="{{item.dimsList}}" wx:for-item="d" wx:key="key" class="dim-row">
+          <text class="dim-row-name">{{d.name}}</text>
+          <view class="bar-wrap dim-bar">
+            <view class="bar-fill" style="width: {{d.percent}}%"></view>
+          </view>
+          <text class="dim-row-value">{{d.value}}/{{d.max}}</text>
+        </view>
+        <view wx:if="{{!item.submitted && item.showViolation}}" class="notice notice-red mt-16">本周未上传照片，将累计 1 次违规</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 本人寝室违规提醒：仅本人可见，不对外公示 -->
+  <view wx:if="{{myViolation}}" class="card private-card">
+    <view class="row-between">
+      <text class="title">🔒 我寝室的违规提醒</text>
+      <text class="tag tag-warn">{{myViolation.count}} 次</text>
+    </view>
+    <view class="text-weak mt-8">此内容仅你本人可见，不会在榜单中公示。</view>
+    <view wx:for="{{myViolation.items}}" wx:for-item="t" wx:key="*this" class="text-weak">· {{t}}</view>
+  </view>
+
+  <!-- 违规名单：仅管理员 / 生活部可见 -->
+  <block wx:if="{{canSeeViolation}}">
+    <view wx:if="{{punishedList.length}}" class="card">
+      <text class="title">⚠️ 已达处罚线寝室（累计 ≥ 3 次）</text>
+      <view class="text-weak mt-8">仅管理部门可见 · 予以公开批评并纳入年度评优考核扣分</view>
+      <view wx:for="{{punishedList}}" wx:key="name" class="viol-item">
+        <view class="row-between">
+          <text class="bold">{{item.name}}</text>
+          <text class="tag tag-red">{{item.count}} 次</text>
+        </view>
+        <view wx:for="{{item.items}}" wx:for-item="t" wx:key="*this" class="text-weak">· {{t}}</view>
+      </view>
+    </view>
+
+    <view wx:if="{{warnedList.length}}" class="card">
+      <text class="title">违规预警（累计 1-2 次）</text>
+      <view class="text-weak mt-8">仅管理部门可见</view>
+      <view wx:for="{{warnedList}}" wx:key="name" class="viol-item">
+        <view class="row-between">
+          <text class="bold">{{item.name}}</text>
+          <text class="tag tag-warn">{{item.count}} 次</text>
+        </view>
+        <view wx:for="{{item.items}}" wx:for-item="t" wx:key="*this" class="text-weak">· {{t}}</view>
+      </view>
+    </view>
+  </block>
+
+  <view class="footnote" bindtap="goRules">评比规则以此为准，查看完整规则 ›</view>
+</view>

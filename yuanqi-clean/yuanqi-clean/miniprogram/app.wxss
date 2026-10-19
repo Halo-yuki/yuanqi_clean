@@ -1,0 +1,227 @@
+/* app.wxss —— 全局样式（致元书院蓝 · 猴子徽标主色） */
+page {
+  --primary: #2b4ea2;
+  --primary-light: #e3ecfb;
+  --primary-soft: #f3f6fd;
+  --danger: #e5484d;
+  --danger-light: #fee9ea;
+  --warn: #f59e0b;
+  --warn-light: #fef3c7;
+  --text: #1f2937;
+  --text-sub: #6b7280;
+  --text-weak: #9aa3ad;
+  --line: #eceef1;
+  --card: #ffffff;
+  --bg: #f3f6fd;
+
+  background: var(--bg);
+  color: var(--text);
+  font-size: 28rpx;
+  line-height: 1.6;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Helvetica, sans-serif;
+}
+
+/* ---------- 通用容器 ---------- */
+.page {
+  padding: 24rpx 24rpx 40rpx;
+  box-sizing: border-box;
+  min-height: 100vh;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(23, 43, 33, 0.05);
+}
+
+.card-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ---------- 文字 ---------- */
+.title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.sub-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--primary);
+  margin: 16rpx 0 8rpx;
+}
+
+.text {
+  font-size: 27rpx;
+  color: #374151;
+}
+
+.text-sub {
+  font-size: 25rpx;
+  color: var(--text-sub);
+}
+
+.text-weak {
+  font-size: 24rpx;
+  color: var(--text-weak);
+}
+
+.bold {
+  font-weight: 600;
+}
+
+/* ---------- 标签 ---------- */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4rpx 16rpx;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  line-height: 34rpx;
+  margin-right: 10rpx;
+}
+
+.tag-green {
+  background: var(--primary-light);
+  color: #2b4ea2;
+}
+
+.tag-red {
+  background: var(--danger-light);
+  color: var(--danger);
+}
+
+.tag-warn {
+  background: var(--warn-light);
+  color: #b45309;
+}
+
+.tag-gray {
+  background: #f1f3f5;
+  color: var(--text-sub);
+}
+
+/* ---------- 按钮 ---------- */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 84rpx;
+  border-radius: 16rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  box-sizing: border-box;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-primary.disabled,
+.btn-primary[disabled] {
+  background: #b6c7ec;
+  color: #ffffff;
+}
+
+.btn-ghost {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border: 2rpx solid var(--primary-light);
+}
+
+.btn-line {
+  background: #fff;
+  color: var(--text-sub);
+  border: 2rpx solid var(--line);
+}
+
+.btn-sm {
+  height: 60rpx;
+  padding: 0 24rpx;
+  font-size: 25rpx;
+  border-radius: 12rpx;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- 结构辅助 ---------- */
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+}
+
+.divider {
+  height: 2rpx;
+  background: var(--line);
+  margin: 20rpx 0;
+}
+
+.empty {
+  padding: 80rpx 0;
+  text-align: center;
+  color: var(--text-weak);
+  font-size: 26rpx;
+}
+
+.mt-8 { margin-top: 8rpx; }
+.mt-16 { margin-top: 16rpx; }
+.mt-24 { margin-top: 24rpx; }
+.mb-16 { margin-bottom: 16rpx; }
+
+/* ---------- 提示条 ---------- */
+.notice {
+  display: flex;
+  align-items: flex-start;
+  padding: 18rpx 20rpx;
+  border-radius: 14rpx;
+  font-size: 25rpx;
+  line-height: 1.5;
+  margin-bottom: 20rpx;
+}
+
+.notice-warn {
+  background: var(--warn-light);
+  color: #92400e;
+}
+
+.notice-info {
+  background: var(--primary-soft);
+  color: #2b4ea2;
+}
+
+.notice-red {
+  background: var(--danger-light);
+  color: #b42318;
+}
+
+/* ---------- 进度条 ---------- */
+.bar-wrap {
+  height: 14rpx;
+  background: #eef1f4;
+  border-radius: 999rpx;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #5b83d6, #2b4ea2);
+  border-radius: 999rpx;
+}

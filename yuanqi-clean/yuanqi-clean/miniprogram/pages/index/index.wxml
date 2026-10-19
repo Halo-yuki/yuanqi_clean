@@ -1,0 +1,129 @@
+<!-- pages/index/index.wxml —— 首页：规则展示 -->
+<view class="page">
+
+  <!-- 活动横幅 -->
+  <view class="banner">
+    <view class="banner-top">
+      <view>
+        <view class="banner-title">{{activityName}}</view>
+        <view class="banner-sub">{{academy}} · {{versionText}}</view>
+      </view>
+      <view class="banner-week">
+        <view class="banner-week-label">{{weekLabel}}</view>
+        <view class="banner-week-range">{{weekRange}}</view>
+      </view>
+    </view>
+    <image class="banner-mascot" src="/assets/logo.jpg" mode="aspectFit" />
+
+    <view class="banner-phase">
+      <view class="row-between">
+        <text class="banner-phase-name">当前环节：{{phase.name}}</text>
+        <text class="banner-phase-idx">{{phaseIndex + 1}}/5</text>
+      </view>
+      <view class="banner-phase-tip">{{phase.tip}}</view>
+      <view class="steps">
+        <view wx:for="{{phases}}" wx:key="key" class="step {{index <= phaseIndex ? 'step-on' : ''}}">
+          <view class="step-dot"></view>
+          <view class="step-name">{{item.name}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 本周进度 -->
+  <view class="card">
+    <view class="row-between">
+      <view class="col">
+        <text class="title">本周填报进度</text>
+        <text class="text-weak mt-8">照片提交 {{submitCount}}/{{roomCount}} · 评分记录 {{reviewCount}}</text>
+      </view>
+      <view class="go-btn" bindtap="goRank">查看榜单 ›</view>
+    </view>
+    <view class="bar-wrap mt-16">
+      <view class="bar-fill" style="width: {{roomCount ? (submitCount / roomCount * 100) : 0}}%"></view>
+    </view>
+    <view wx:if="{{!uploadWindow}}" class="notice notice-warn mt-16">
+      当前不在「周日 22:00 — 周一 8:00」上传时间窗内，逾期上传将按违规处理。
+    </view>
+  </view>
+
+  <!-- 规则卡片区（可展开） -->
+  <view class="card" wx:for="{{sections}}" wx:key="id">
+    <view class="card-hd" bindtap="toggle" data-id="{{item.id}}">
+      <view class="row">
+        <text class="sec-icon">{{item.icon}}</text>
+        <view class="col">
+          <text class="title">{{item.title}}</text>
+          <text class="text-weak">{{item.summary}}</text>
+        </view>
+      </view>
+      <text class="arrow {{expanded[item.id] ? 'arrow-up' : ''}}">›</text>
+    </view>
+
+    <block wx:if="{{expanded[item.id]}}">
+      <view class="divider"></view>
+      <block wx:for="{{item.blocks}}" wx:for-item="b" wx:key="index">
+
+        <!-- 段落 -->
+        <text wx:if="{{b.type === 'text'}}" class="text block-text">{{b.text}}</text>
+
+        <!-- 小标题 -->
+        <view wx:elif="{{b.type === 'sub'}}" class="sub-title">{{b.text}}</view>
+
+        <!-- 条目列表 -->
+        <view wx:elif="{{b.type === 'bullets'}}">
+          <view wx:for="{{b.items}}" wx:for-item="t" wx:key="index" class="bullet">
+            <text class="bullet-dot">•</text>
+            <text class="text bullet-text">{{t}}</text>
+          </view>
+        </view>
+
+        <!-- 表格 -->
+        <view wx:elif="{{b.type === 'table'}}" class="table">
+          <view class="tr tr-head">
+            <view wx:for="{{b.head}}" wx:for-item="h" wx:for-index="hi" wx:key="hi"
+                  class="td td-head" style="flex: {{b.cols[hi]}}">{{h}}</view>
+          </view>
+          <view wx:for="{{b.rows}}" wx:for-item="row" wx:for-index="ri" wx:key="ri" class="tr">
+            <view wx:for="{{row}}" wx:for-item="c" wx:for-index="ci" wx:key="ci"
+                  class="td" style="flex: {{b.cols[ci]}}">{{c}}</view>
+          </view>
+        </view>
+
+        <!-- 三张固定照片位 -->
+        <view wx:elif="{{b.type === 'cards'}}">
+          <view wx:for="{{b.items}}" wx:for-item="c" wx:key="no" class="slot-card">
+            <view class="slot-no">{{c.no}}</view>
+            <view class="col">
+              <text class="bold">{{c.name}}</text>
+              <text class="text-sub">{{c.desc}}</text>
+            </view>
+          </view>
+        </view>
+
+      </block>
+    </block>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="quick">
+    <view class="quick-item" bindtap="goUpload">
+      <text class="quick-icon">📷</text>
+      <text>上传照片</text>
+    </view>
+    <view class="quick-item" bindtap="goScore">
+      <text class="quick-icon">✅</text>
+      <text>进入评分</text>
+    </view>
+    <view class="quick-item" bindtap="goRank">
+      <text class="quick-icon">🐵</text>
+      <text>焕新之星</text>
+    </view>
+    <view class="quick-item" bindtap="goMine">
+      <text class="quick-icon">⚙️</text>
+      <text>身份设置</text>
+    </view>
+  </view>
+
+  <view class="footnote">本方案最终解释权归 {{academy}} 2025 年级中心组所有</view>
+</view>

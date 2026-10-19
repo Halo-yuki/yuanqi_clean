@@ -1,0 +1,97 @@
+/* pages/mine/mine.wxss */
+.brand-card {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #2b4ea2, #4a72d4);
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  color: #fff;
+  box-shadow: 0 8rpx 24rpx rgba(43, 78, 162, 0.3);
+}
+
+.brand-logo {
+  width: 110rpx;
+  height: 110rpx;
+  border-radius: 50%;
+  border: 4rpx solid rgba(255, 255, 255, 0.4);
+  margin-right: 22rpx;
+  background: #fff;
+}
+
+.brand-name {
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.brand-sub {
+  font-size: 22rpx;
+  opacity: 0.9;
+  margin-top: 6rpx;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  margin-top: 18rpx;
+}
+
+.form-label {
+  width: 160rpx;
+  font-size: 27rpx;
+  color: var(--text);
+}
+
+.form-input {
+  flex: 1;
+  background: #f4f6fa;
+  border-radius: 12rpx;
+  padding: 14rpx 18rpx;
+  font-size: 27rpx;
+}
+
+.form-input.short {
+  flex: none;
+  width: 200rpx;
+  margin-right: 12rpx;
+}
+
+.picker {
+  font-size: 26rpx;
+  color: var(--primary);
+  background: var(--primary-soft);
+  padding: 12rpx 20rpx;
+  border-radius: 12rpx;
+}
+
+.ml {
+  margin-left: 12rpx;
+}
+
+.rater-item {
+  border-top: 2rpx solid var(--line);
+  padding: 18rpx 0;
+}
+
+.rater-item:first-of-type {
+  border-top: none;
+  margin-top: 12rpx;
+}
+
+.rater-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  margin-right: 12rpx;
+}
+
+.room-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 2rpx solid var(--line);
+  padding: 16rpx 0;
+}
+
+.room-row:first-of-type {
+  border-top: none;
+}

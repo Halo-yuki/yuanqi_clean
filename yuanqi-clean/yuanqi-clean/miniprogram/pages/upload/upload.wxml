@@ -1,0 +1,93 @@
+<!-- pages/upload/upload.wxml —— 寝室长上传照片 -->
+<view class="page">
+
+  <!-- 身份卡 -->
+  <view class="card">
+    <view class="row-between">
+      <view class="col">
+        <text class="title">我的寝室</text>
+        <text class="text-sub mt-8">{{roomName}} · 命名格式「楼栋-寝室号」</text>
+      </view>
+      <view class="btn btn-sm btn-ghost" bindtap="goMine">{{room ? '切换' : '去设置'}}</view>
+    </view>
+    <view wx:if="{{!room}}" class="notice notice-warn mt-16">
+      尚未绑定寝室，请到「我的」页面选择身份为「寝室长」并绑定所属寝室。
+    </view>
+    <view wx:if="{{!hasPermission}}" class="notice notice-warn mt-16">
+      当前身份无上传权限，仅「寝室长 / 管理员」可提交照片。
+    </view>
+    <view wx:if="{{!uploadWindow}}" class="notice notice-info mt-16">
+      上传时间窗：周日 22:00 — 周一 8:00。当前不在时间窗内，提交将被标记「逾期」。
+    </view>
+  </view>
+
+  <!-- 周次 -->
+  <view class="card">
+    <view class="row-between">
+      <text class="title">选择周次</text>
+      <picker mode="selector" range="{{weeks}}" range-key="label" value="{{weekIndex}}" bindchange="onWeekChange">
+        <view class="picker">
+          {{weeks[weekIndex].label}}（{{weeks[weekIndex].range}}） ▾
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 三张固定照片位 -->
+  <view class="card">
+    <view class="row-between">
+      <text class="title">上传卫生成果照片</text>
+      <text class="tag tag-green">固定三张</text>
+    </view>
+    <view class="text-weak mt-8">须原图拍摄、画面清晰、光线充足；禁止网图、旧图、修图拼接。</view>
+
+    <view class="slot" wx:for="{{slots}}" wx:key="key">
+      <view class="slot-hd">
+        <text class="slot-no">{{item.no}}</text>
+        <view class="col">
+          <text class="bold">{{item.name}}</text>
+          <text class="text-sub">{{item.desc}}</text>
+        </view>
+      </view>
+      <view class="slot-body">
+        <view wx:if="{{item.path}}" class="photo-box">
+          <image class="photo" src="{{item.path}}" mode="aspectFill" bindtap="previewPhoto" data-url="{{item.path}}"></image>
+          <view class="photo-del" bindtap="removePhoto" data-key="{{item.key}}">×</view>
+        </view>
+        <view wx:else class="photo-empty" bindtap="choosePhoto" data-key="{{item.key}}">
+          <text class="photo-plus">+</text>
+          <text class="text-weak">点击现场拍摄（仅支持拍照，不能选相册）</text>
+        </view>
+      </view>
+    </view>
+
+    <button class="btn btn-primary mt-24 {{canSubmit ? '' : 'disabled'}}" bindtap="submit">
+      提交本周照片（已完成 {{filledCount}}/3）
+    </button>
+    <view class="rule-link" bindtap="goRules">查看照片拍摄要求 ›</view>
+  </view>
+
+  <!-- 我的提交记录 -->
+  <view class="card">
+    <text class="title">我的提交记录</text>
+    <view wx:if="{{!myList.length}}" class="empty">还没有提交记录</view>
+    <view wx:for="{{myList}}" wx:key="id" class="record">
+      <view class="row-between">
+        <view class="row">
+          <text class="bold">{{item.weekLabel}}</text>
+          <text class="tag tag-{{item.statusTag}}">{{item.statusText}}</text>
+          <text wx:if="{{item.late}}" class="tag tag-warn">逾期</text>
+        </view>
+        <text class="text-weak">{{item.timeText}}</text>
+      </view>
+      <view class="row-between mt-16">
+        <view class="row">
+          <image wx:for="{{item.photos}}" wx:for-item="p" wx:key="slot" class="thumb"
+                 src="{{p.path}}" mode="aspectFill" bindtap="previewRecordPhoto" data-url="{{p.path}}"></image>
+          <text wx:if="{{!item.photoCount}}" class="text-weak">（演示数据无图片文件）</text>
+        </view>
+        <view class="btn btn-sm btn-line" bindtap="deleteRecord" data-id="{{item.id}}">删除</view>
+      </view>
+    </view>
+  </view>
+</view>

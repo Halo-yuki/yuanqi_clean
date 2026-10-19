@@ -1,0 +1,111 @@
+<!-- pages/mine/mine.wxml —— 身份 / 权限 / 名单 / 数据 -->
+<view class="page">
+
+  <!-- 书院品牌头 -->
+  <view class="brand-card">
+    <image class="brand-logo" src="/assets/logo.jpg" mode="aspectFit" />
+    <view class="col">
+      <text class="brand-name">致元书院元气大扫除 🐵</text>
+      <text class="brand-sub">南京航空航天大学 · 2026 试行版</text>
+    </view>
+  </view>
+
+  <!-- 我的身份 -->
+  <view class="card">
+    <text class="title">我的身份</text>
+    <view class="notice notice-info mt-16">{{roleDesc}}</view>
+
+    <view class="form-row">
+      <text class="form-label">姓名</text>
+      <input class="form-input" value="{{nameInput}}" bindinput="onNameInput" placeholder="请输入姓名" />
+      <view class="btn btn-sm btn-ghost" bindtap="saveName">保存</view>
+    </view>
+
+    <view class="form-row">
+      <text class="form-label">角色</text>
+      <picker mode="selector" range="{{roles}}" range-key="name" value="{{roleIndex}}" bindchange="onRoleChange">
+        <view class="picker">{{roles[roleIndex].name}} ▾</view>
+      </picker>
+    </view>
+
+    <view class="form-row">
+      <text class="form-label">所属寝室</text>
+      <picker mode="selector" range="{{roomNames}}" value="{{roomIndex}}" bindchange="onRoomChange">
+        <view class="picker">{{roomNames[roomIndex] || '未绑定'}} ▾</view>
+      </picker>
+    </view>
+
+    <view class="row mt-16">
+      <view class="btn btn-sm btn-ghost" bindtap="goUpload">去上传照片</view>
+      <view class="btn btn-sm btn-line ml" bindtap="goScore">去评分</view>
+    </view>
+  </view>
+
+  <!-- 评委名单（权限可配置） -->
+  <view class="card">
+    <view class="row-between">
+      <text class="title">评委名单 · 权限配置</text>
+      <text class="text-weak">{{raterList.length}} 人</text>
+    </view>
+    <view class="text-weak mt-8">停用或移除后，该人员无法进行评分；生活部互评「优秀」占比上限 2/3 由系统强制校验。</view>
+
+    <view wx:for="{{raterList}}" wx:key="id" class="rater-item">
+      <view class="row-between">
+        <view class="row">
+          <text class="rater-name">{{item.name}}</text>
+          <text class="tag {{item.role === 'admin' ? 'tag-warn' : 'tag-green'}}">
+            {{item.role === 'admin' ? '管理员' : '生活部'}}
+          </text>
+          <text wx:if="{{!item.enabled}}" class="tag tag-red">已停用</text>
+        </view>
+        <view class="row">
+          <view class="btn btn-sm btn-ghost" bindtap="useRater" data-id="{{item.id}}">用此身份</view>
+          <view class="btn btn-sm btn-line ml" bindtap="toggleRater" data-id="{{item.id}}">{{item.enabled ? '停用' : '启用'}}</view>
+          <view class="btn btn-sm btn-line ml" bindtap="removeRater" data-id="{{item.id}}">删除</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="divider"></view>
+    <view class="form-row">
+      <input class="form-input" value="{{raterNameInput}}" bindinput="onRaterNameInput" placeholder="新评委姓名" />
+      <picker mode="selector" range="{{raterRoles}}" range-key="name" value="{{raterRoleIndex}}" bindchange="onRaterRoleChange">
+        <view class="picker">{{raterRoles[raterRoleIndex].name}} ▾</view>
+      </picker>
+      <view class="btn btn-sm btn-primary" bindtap="addRater">添加</view>
+    </view>
+  </view>
+
+  <!-- 寝室名单 -->
+  <view class="card">
+    <view class="row-between">
+      <text class="title">寝室名单</text>
+      <text class="text-weak">{{roomList.length}} 间</text>
+    </view>
+    <view wx:for="{{roomList}}" wx:key="id" class="room-row">
+      <text class="bold">{{item.name}}</text>
+      <view class="btn btn-sm btn-line" bindtap="removeRoom" data-id="{{item.id}}">删除</view>
+    </view>
+    <view class="divider"></view>
+    <view class="form-row">
+      <input class="form-input short" value="{{buildingInput}}" bindinput="onBuildingInput" placeholder="楼栋 B8" />
+      <input class="form-input short" value="{{roomNoInput}}" bindinput="onRoomNoInput" placeholder="寝室号 888" />
+      <view class="btn btn-sm btn-primary" bindtap="addRoom">添加</view>
+    </view>
+  </view>
+
+  <!-- 数据管理 -->
+  <view class="card">
+    <text class="title">数据管理</text>
+    <view class="text-weak mt-8">
+      寝室 {{stat.rooms}} 间 · 提交 {{stat.submissions}} 条 · 评分 {{stat.reviews}} 条 · 照片 {{stat.photos}} 张
+    </view>
+    <view class="row mt-16">
+      <view class="btn btn-ghost" bindtap="loadDemo">载入演示数据</view>
+      <view class="btn btn-line ml" bindtap="clearData">清空业务数据</view>
+    </view>
+    <view class="text-weak mt-16">
+      学习阶段数据存放在本地缓存；接入云开发后，改为云数据库读写即可，页面代码无需改动。
+    </view>
+  </view>
+</view>

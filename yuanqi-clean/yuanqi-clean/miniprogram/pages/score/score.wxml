@@ -1,0 +1,132 @@
+<!-- pages/score/score.wxml —— 评委评分（多维度） -->
+<view class="page">
+
+  <view class="card">
+    <view class="row-between">
+      <view class="col">
+        <text class="title">评委：{{profile.name}}</text>
+        <text class="text-sub mt-8">身份：{{roleText}} · 模式：{{kindText}}</text>
+      </view>
+      <picker mode="selector" range="{{weeks}}" range-key="label" value="{{weekIndex}}" bindchange="onWeekChange">
+        <view class="picker">{{weeks[weekIndex].label}} ▾</view>
+      </picker>
+    </view>
+    <view class="row-between mt-16">
+      <text class="text-weak">本周已评 {{gradedCount}}/{{totalRooms}} 间寝室</text>
+      <text class="text-weak">点击寝室即可打分</text>
+    </view>
+    <view class="bar-wrap mt-16">
+      <view class="bar-fill" style="width: {{totalRooms ? (gradedCount / totalRooms * 100) : 0}}%"></view>
+    </view>
+  </view>
+
+  <!-- 无权限：寝室长看不到评分内容 -->
+  <view wx:if="{{!canReview}}" class="card">
+    <view class="notice notice-warn">
+      评分仅对「管理员 · 生活部」开放。当前身份（{{roleText}}）不可见，请在「我的」切换身份。
+    </view>
+    <button class="btn btn-primary" bindtap="goMine">去设置身份</button>
+    <button class="btn btn-ghost mt-16" bindtap="quickUseRater">一键体验评委身份</button>
+  </view>
+
+  <!-- 寝室列表 -->
+  <view wx:if="{{canReview}}" class="card">
+    <text class="title">本周寝室名单</text>
+    <view wx:for="{{pendingList}}" wx:key="roomId" class="room-item" bindtap="openPanel" data-index="{{index}}">
+      <view class="row-between">
+        <view class="row">
+          <text class="room-name">{{item.roomName}}</text>
+          <text wx:if="{{item.invalid}}" class="tag tag-red">照片不合格</text>
+          <text wx:elif="{{!item.submitted}}" class="tag tag-red">未提交</text>
+          <text wx:else class="tag tag-gray">{{item.photoCount}} 张</text>
+        </view>
+        <text class="tag tag-{{item.statusTag}}">{{item.statusText}}</text>
+      </view>
+      <view class="row-between mt-8">
+        <text class="text-weak">提交：{{item.submitText}}</text>
+        <text wx:if="{{item.grade}}" class="text-weak">评级 {{item.grade}} 级（其他评委 {{item.otherCount}} 条）</text>
+        <text wx:else class="text-weak">其他评委 {{item.otherCount}} 条</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 评分面板 -->
+  <view wx:if="{{panel.show}}" class="panel-mask">
+    <view class="panel">
+      <view class="panel-hd">
+        <text class="title">{{panel.roomName}} · {{weeks[weekIndex].label}}</text>
+        <text class="panel-close" bindtap="closePanel">×</text>
+      </view>
+
+      <scroll-view class="panel-body" scroll-y>
+        <!-- 照片 -->
+        <view class="sec-label">上传照片</view>
+        <view wx:if="{{panel.photos.length}}" class="photo-row">
+          <image wx:for="{{panel.photos}}" wx:for-item="p" wx:key="slot" class="panel-photo"
+                 src="{{p.path}}" mode="aspectFill" bindtap="previewPhoto" data-url="{{p.path}}"></image>
+        </view>
+        <view wx:else class="no-photo">该寝室本周未上传照片（可先记录现场情况）</view>
+
+        <!-- 管理员可切换评分类型 -->
+        <view wx:if="{{panel.isAdmin}}" class="kind-switch">
+          <view class="kind-item {{panel.kindChoose === 'mutual' ? 'kind-on' : ''}}" bindtap="switchKind" data-key="mutual">交叉互评</view>
+          <view class="kind-item {{panel.kindChoose === 'inspect' ? 'kind-on' : ''}}" bindtap="switchKind" data-key="inspect">现场抽查</view>
+        </view>
+
+        <!-- 现场抽查：五个维度打分（仅管理员） -->
+        <block wx:if="{{panel.kindChoose === 'inspect'}}">
+          <view class="sec-label">分项评分（每项满分 20 分）</view>
+          <view wx:for="{{panel.dimList}}" wx:key="key" class="dim">
+            <view class="row-between">
+              <text class="dim-name">{{item.name}}</text>
+              <text class="dim-value">{{item.value}} / {{item.max}}</text>
+            </view>
+            <text class="text-weak">{{item.desc}}</text>
+            <slider class="dim-slider" min="0" max="{{item.max}}" value="{{item.value}}"
+                    activeColor="#2b4ea2" backgroundColor="#e5e7eb" block-size="22" block-color="#2b4ea2"
+                    show-value="{{false}}" bindchange="onSlider" data-key="{{item.key}}" />
+          </view>
+
+          <view class="total-box">
+            <view class="col">
+              <text class="text-sub">合计得分</text>
+              <text class="total-num">{{panel.total}} 分</text>
+            </view>
+            <view class="grade-box grade-{{panel.gradeColor}}">
+              <text class="grade-text">{{panel.gradeLabel}}</text>
+            </view>
+          </view>
+
+          <view class="sec-label">现场抽查评级（点击可快速套用分值）</view>
+          <view class="opt-row">
+            <view wx:for="{{gradeRules}}" wx:key="grade" class="opt {{panel.grade === item.grade ? 'opt-on' : ''}}"
+                  bindtap="pickGrade" data-key="{{item.grade}}">{{item.grade}} 级</view>
+          </view>
+          <view class="text-weak mt-8">评级 ≤ C 的寝室将累计 1 次违规。</view>
+        </block>
+
+        <!-- 交叉互评：只评档位，不打分 -->
+        <block wx:else>
+          <view class="notice notice-info">交叉互评只评档位，不打分。</view>
+          <view class="sec-label">互评结论（「优秀」占比不得超过 2/3）</view>
+          <view class="opt-row">
+            <view wx:for="{{mutualOptions}}" wx:key="key"
+                  class="opt {{panel.mutual === item.key ? 'opt-on opt-' + item.tag : ''}}"
+                  bindtap="pickMutual" data-key="{{item.key}}">{{item.name}}</view>
+          </view>
+        </block>
+
+        <view class="sec-label">评语 / 备注</view>
+        <textarea class="remark" value="{{panel.remark}}" bindinput="onRemark" maxlength="120"
+                  placeholder="例如：地面干净，阳台需清理杂物（不合格寝室必须备注具体问题）"></textarea>
+
+        <view class="panel-btns">
+          <view class="btn btn-primary" bindtap="saveReview">保存评分</view>
+          <view class="btn btn-line mt-16" bindtap="markInvalid">标记照片不合格</view>
+          <view wx:if="{{panel.editingId}}" class="btn btn-line mt-16" bindtap="deleteReview">删除该评分</view>
+          <view class="btn btn-ghost mt-16" bindtap="closePanel">关闭</view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>
